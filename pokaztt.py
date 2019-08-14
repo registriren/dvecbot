@@ -25,50 +25,6 @@ email_text = None
 
 bot = BotHandler(token)
 
-def body():
-    if type_upd == 'bot_started':
-            bot.send_message(u'Это бот для удобной передачи показаний\n' +
-                                'электрических счетчиков в ДЭК г. Хабаровск.\n' +
-                                'Подробности в /help', chat_id)
-            text = None
-        if text == '/help':
-            bot.send_message(u'Введите показания счетчика цифрами', chat_id)
-            text = None
-        if type_upd == 'message_created' and text != None: #and sender in id_a:
-            email_text = 'Номер лицевого счёта: {}\nАдрес: {}\nФИО: {}\nДата снятия показаний: {}\nПоказания счетчика: {}'.format(
-                            ls,
-                            adr,
-                            fio,
-                            dat,
-                            text)
-            bot.send_message(u'Данные будут направлены по адресу: {}'.format(dest_email), chat_id)
-            bot.send_message(u'{}'.format(email_text), chat_id)
-            buttons = [{"type": 'callback',
-                        "text": 'Да',
-                        "payload": 'yes'},
-                       {"type": 'callback',
-                        "text": 'Нет',
-                        "payload": 'no'}]
-            bot.send_buttons('Отправить?', buttons, chat_id)
-        if payload == 'yes' and email_text != None:
-            bot.send_message(u' отправляю...', chat_id)
-            msg = MIMEText(email_text, 'plain', 'utf-8')
-            msg['Subject'] = Header(subject, 'utf-8')
-            msg['From'] = email
-            msg['To'] = dest_email
-            server = smtp.SMTP_SSL('smtp.yandex.ru')
-            server.set_debuglevel(1)
-            server.ehlo(email)
-            server.login(email, password)
-            server.auth_plain()
-            server.sendmail(msg['From'], dest_email, msg.as_string())
-            server.quit()
-            bot.send_message(u'Ваши показания переданы', chat_id)
-            email_text = None
-        elif payload == 'no':
-            bot.send_message(u'Жду новые данные...', chat_id)
-            email_text = None
-    
 
 def main():
 
@@ -85,11 +41,50 @@ def main():
         sender = bot.get_user_id(last_update)
         
         if sender in id_a:
-            body()
+            if type_upd == 'bot_started':
+                bot.send_message(u'Это бот для удобной передачи показаний\n' +
+                                    'электрических счетчиков в ДЭК г. Хабаровск.\n' +
+                                    'Подробности в /help', chat_id)
+                text = None
+            if text == '/help':
+                bot.send_message(u'Введите показания счетчика цифрами', chat_id)
+                text = None
+            if type_upd == 'message_created' and text != None: #and sender in id_a:
+                email_text = 'Номер лицевого счёта: {}\nАдрес: {}\nФИО: {}\nДата снятия показаний: {}\nПоказания счетчика: {}'.format(
+                            ls,
+                            adr,
+                            fio,
+                            dat,
+                            text)
+                bot.send_message(u'Данные будут направлены по адресу: {}'.format(dest_email), chat_id)
+                bot.send_message(u'{}'.format(email_text), chat_id)
+                buttons = [{"type": 'callback',
+                        "text": 'Да',
+                        "payload": 'yes'},
+                       {"type": 'callback',
+                        "text": 'Нет',
+                        "payload": 'no'}]
+            if payload == 'yes' and email_text != None:
+                bot.send_message(u' отправляю...', chat_id)
+                msg = MIMEText(email_text, 'plain', 'utf-8')
+                msg['Subject'] = Header(subject, 'utf-8')
+                msg['From'] = email
+                msg['To'] = dest_email
+                server = smtp.SMTP_SSL('smtp.yandex.ru')
+                server.set_debuglevel(1)
+                server.ehlo(email)
+                server.login(email, password)
+                server.auth_plain()
+                server.sendmail(msg['From'], dest_email, msg.as_string())
+                server.quit()
+                bot.send_message(u'Ваши показания переданы', chat_id)
+                email_text = None
+            elif payload == 'no':
+                bot.send_message(u'Жду новые данные...', chat_id)
+                email_text = None
         else:
             bot.send_message('Доступ запрещён!', chat_id)
-        
-        
+            
 
 if __name__ == '__main__':
     try:
