@@ -64,6 +64,7 @@ def main():
                        {"type": 'callback',
                         "text": 'Нет',
                         "payload": 'no'}]
+                bot.send_buttons('Отправить?', buttons, chat_id)
             if payload == 'yes' and email_text != None:
                 bot.send_message(u' отправляю...', chat_id)
                 msg = MIMEText(email_text, 'plain', 'utf-8')
