@@ -25,21 +25,8 @@ email_text = None
 
 bot = BotHandler(token)
 
-def main():
-
-    while True:
-        last_update = bot.get_updates()
-        if last_update == None: #проверка на пустое событие, если пусто - возврат к началу цикла
-            continue
-        today = date.today()
-        dat = today.strftime("%d.%m.%Y")
-        type_upd = bot.get_update_type(last_update)
-        text = bot.get_text(last_update)
-        chat_id = bot.get_chat_id(last_update)
-        payload = bot.get_payload(last_update)
-        #sender = bot.get_user_id(last_update)
-
-        if type_upd == 'bot_started':
+def body():
+    if type_upd == 'bot_started':
             bot.send_message(u'Это бот для удобной передачи показаний\n' +
                                 'электрических счетчиков в ДЭК г. Хабаровск.\n' +
                                 'Подробности в /help', chat_id)
@@ -81,6 +68,28 @@ def main():
         elif payload == 'no':
             bot.send_message(u'Жду новые данные...', chat_id)
             email_text = None
+    
+
+def main():
+
+    while True:
+        last_update = bot.get_updates()
+        if last_update == None: #проверка на пустое событие, если пусто - возврат к началу цикла
+            continue
+        today = date.today()
+        dat = today.strftime("%d.%m.%Y")
+        type_upd = bot.get_update_type(last_update)
+        text = bot.get_text(last_update)
+        chat_id = bot.get_chat_id(last_update)
+        payload = bot.get_payload(last_update)
+        sender = bot.get_user_id(last_update)
+        
+        if sender in id_a:
+            body()
+        else:
+            bot.send_message('Доступ запрещён!', chat_id)
+        
+        
 
 if __name__ == '__main__':
     try:
