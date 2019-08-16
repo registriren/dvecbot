@@ -27,9 +27,9 @@ bot = BotHandler(token)
 
 
 def main():
-    new_marker = 445117
+    marker = 445117
     while True:
-        last_update = bot.get_updates(new_marker)
+        last_update = bot.get_updates(marker)
         if last_update == None: #проверка на пустое событие, если пусто - возврат к началу цикла
             continue
         today = date.today()
@@ -88,8 +88,7 @@ def main():
         else:
             bot.send_message('Доступ запрещён!', chat_id)
 
-        new_marker = marker + 1
-            
+
 
 if __name__ == '__main__':
     try:
