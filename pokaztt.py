@@ -27,9 +27,9 @@ bot = BotHandler(token)
 
 
 def main():
-
+    new_marker = 445117
     while True:
-        last_update = bot.get_updates()
+        last_update = bot.get_updates(new_marker)
         if last_update == None: #проверка на пустое событие, если пусто - возврат к началу цикла
             continue
         today = date.today()
@@ -39,6 +39,7 @@ def main():
         chat_id = bot.get_chat_id(last_update)
         payload = bot.get_payload(last_update)
         sender = bot.get_user_id(last_update)
+        marker = bot.get_marker(last_update)
         
         if sender in id_a:
             if type_upd == 'bot_started':
@@ -65,6 +66,7 @@ def main():
                         "text": 'Нет',
                         "payload": 'no'}]
                 bot.send_buttons('Отправить?', buttons, chat_id)
+                text = None
             if payload == 'yes' and email_text != None:
                 bot.send_message(u' отправляю...', chat_id)
                 msg = MIMEText(email_text, 'plain', 'utf-8')
@@ -85,6 +87,8 @@ def main():
                 email_text = None
         else:
             bot.send_message('Доступ запрещён!', chat_id)
+
+        new_marker = marker + 1
             
 
 if __name__ == '__main__':
