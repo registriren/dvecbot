@@ -59,12 +59,12 @@ def main():
                             text)
                 bot.send_message(u'Данные будут направлены по адресу: {}'.format(dest_email), chat_id)
                 bot.send_message(u'{}'.format(email_text), chat_id)
-                buttons = [{"type": 'callback',
+                buttons = [[{"type": 'callback',
                         "text": 'Да',
                         "payload": 'yes'},
                        {"type": 'callback',
                         "text": 'Нет',
-                        "payload": 'no'}]
+                        "payload": 'no'}]]
                 bot.send_buttons('Отправить?', buttons, chat_id)
                 text = None
             if payload == 'yes' and email_text != None:
