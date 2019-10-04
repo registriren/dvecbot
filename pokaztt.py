@@ -40,6 +40,8 @@ def main():
         payload = bot.get_payload(last_update)
         sender = bot.get_user_id(last_update)
         marker = bot.get_marker(last_update)
+        callback_id = bot.get_callback_id(last_update)
+
         
         if sender in id_a:
             if type_upd == 'bot_started':
@@ -65,10 +67,13 @@ def main():
                        {"type": 'callback',
                         "text": 'Нет',
                         "payload": 'no'}]]
-                bot.send_buttons('Отправить?', buttons, chat_id)
+                upd = bot.send_buttons('Отправить?', buttons, chat_id)
+                mid = bot.get_message_id(upd)
                 text = None
             if payload == 'yes' and email_text != None:
-                bot.send_message(u' отправляю...', chat_id)
+                bot.send_answer_callback(callback_id, 'отправляю...')
+                # bot.send_message(u' отправляю...', chat_id)
+                bot.delete_message(mid)
                 msg = MIMEText(email_text, 'plain', 'utf-8')
                 msg['Subject'] = Header(subject, 'utf-8')
                 msg['From'] = email
@@ -83,6 +88,7 @@ def main():
                 bot.send_message(u'Ваши показания переданы', chat_id)
                 email_text = None
             elif payload == 'no':
+                bot.delete_message(mid)
                 bot.send_message(u'Жду новые данные...', chat_id)
                 email_text = None
         else:
