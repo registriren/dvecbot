@@ -7,8 +7,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 from datetime import date
 import json
-
-# import re
+import re
 
 config = 'config.json'
 with open(config, 'r', encoding='utf-8') as c:
@@ -25,16 +24,17 @@ def main():
     subject = 'Показания счетчика'
     email_text = None
     flag = 0
-    # PTR = '([A-Za-z0-9])'
+    #PTR = '(|([ДдНн]|[Дд][Ее][Нн][Ьь]|[Нн][Оо][Чч][Ьь])-[0-9]+(|(\.|,)[0-9]+),(| )([ДдНн]|[Дд][Ее][Нн][Ьь]|[Нн][Оо][Чч][Ьь])-)[0-9]+(|(\.|,)[0-9]+) '
     while True:
         last_update = bot.get_updates()
         today = date.today()
         data = today.strftime("%d")
-        if data != '10':
+        if data != '20':
             flag = 0
         if data == '20' and flag == 0:
             for i in conf['id_a']:
-                bot.send_message('Напоминаю об отправке показаний электросчётчика с 20 по 25 число', chat_id=None, user_id=i)
+                bot.send_message('Напоминаю об отправке показаний электросчётчика с 20 по 25 число', chat_id=None,
+                                 user_id=i)
                 flag = 1
         if last_update:
             dat = today.strftime("%d.%m.%Y")
@@ -54,7 +54,9 @@ def main():
                     bot.send_message(u'Введите показания счетчика. Например: день-1234, ночь-0123 ', chat_id)
                     text = None
                 if type_upd == 'message_created' and text:  # and sender in id_a:
-                    if len(text) < 30:  # and re.fullmatch(PTR, text):
+                    #print(text)
+                    #print(re.fullmatch(PTR, text))
+                    if len(text) < 30 # and re.fullmatch(PTR, text):
                         email_text = 'Номер лицевого счёта: {}\nАдрес: {}\nФИО: {}\nДата снятия показаний: {}\nПоказания счетчика: {}'.format(
                             conf['ls'][str(sender)],
                             conf['adr'][str(sender)],
