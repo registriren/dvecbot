@@ -56,7 +56,7 @@ def main():
                 if type_upd == 'message_created' and text:  # and sender in id_a:
                     #print(text)
                     #print(re.fullmatch(PTR, text))
-                    if len(text) < 30 # and re.fullmatch(PTR, text):
+                    if len(text) < 30: # and re.fullmatch(PTR, text):
                         email_text = 'Номер лицевого счёта: {}\nАдрес: {}\nФИО: {}\nДата снятия показаний: {}\nПоказания счетчика: {}'.format(
                             conf['ls'][str(sender)],
                             conf['adr'][str(sender)],
