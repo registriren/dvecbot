@@ -24,7 +24,7 @@ def main():
     subject = 'Показания счетчика'
     email_text = None
     flag = 0
-    #PTR = '(|([ДдНн]|[Дд][Ее][Нн][Ьь]|[Нн][Оо][Чч][Ьь])-[0-9]+(|(\.|,)[0-9]+),(| )([ДдНн]|[Дд][Ее][Нн][Ьь]|[Нн][Оо][Чч][Ьь])-)[0-9]+(|(\.|,)[0-9]+) '
+    PTR = '(|([ДдНн]|[Дд][Ее][Нн][Ьь]|[Нн][Оо][Чч][Ьь])-[0-9]+(|(\.|,)[0-9]+),(| )([ДдНн]|[Дд][Ее][Нн][Ьь]|[Нн][Оо][Чч][Ьь])-)[0-9]+(|(\.|,)[0-9]+)'
     while True:
         last_update = bot.get_updates()
         today = date.today()
@@ -55,8 +55,8 @@ def main():
                     text = None
                 if type_upd == 'message_created' and text:  # and sender in id_a:
                     #print(text)
-                    #print(re.fullmatch(PTR, text))
-                    if len(text) < 30: # and re.fullmatch(PTR, text):
+                    print(re.fullmatch(PTR, text))
+                    if len(text) < 30 and re.fullmatch(PTR, text):
                         email_text = 'Номер лицевого счёта: {}\nАдрес: {}\nФИО: {}\nДата снятия показаний: {}\nПоказания счетчика: {}'.format(
                             conf['ls'][str(sender)],
                             conf['adr'][str(sender)],
