@@ -84,14 +84,17 @@ def main():
                     msg['Subject'] = Header(subject, 'utf-8')
                     msg['From'] = email
                     msg['To'] = dest_email
-                    server = smtp.SMTP_SSL('smtp.yandex.ru')
-                    server.set_debuglevel(1)
-                    server.ehlo(email)
-                    server.login(email, password)
-                    server.auth_plain()
-                    server.sendmail(msg['From'], dest_email, msg.as_string())
-                    server.quit()
-                    bot.send_message(u'Ваши показания переданы', chat_id)
+                    try:
+                        server = smtp.SMTP_SSL('smtp.yandex.ru')
+                        server.set_debuglevel(1)
+                        server.ehlo(email)
+                        server.login(email, password)
+                        server.auth_plain()
+                        server.sendmail(msg['From'], dest_email, msg.as_string())
+                        server.quit()
+                        bot.send_message(u'Ваши показания переданы', chat_id)
+                    except Exception as e:
+                        bot.send_message('Ошибка. Показания НЕ отправлены!\nСведения об ошибке:\n{}'.format(e), chat_id)
                     # email_text = None
                 elif payload == 'no':
                     bot.delete_message(mid)
